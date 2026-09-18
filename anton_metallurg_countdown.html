@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Обратный отсчёт</title>
+<style>
+    * { box-sizing: border-box; }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #0a0a0a;
+        color: #f2f2f2;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wrap {
+        width: min(1100px, 92vw);
+        text-align: center;
+    }
+
+    .label {
+        font-size: clamp(20px, 3vw, 38px);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        margin-bottom: 42px;
+    }
+
+    .timer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(10px, 2vw, 28px);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .unit {
+        min-width: clamp(80px, 14vw, 170px);
+    }
+
+    .number {
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(48px, 9vw, 120px);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.06em;
+    }
+
+    .caption {
+        margin-top: 13px;
+        color: #777;
+        font-size: clamp(11px, 1.4vw, 16px);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+    }
+
+    .separator {
+        font-family: "Courier New", Courier, monospace;
+        font-size: clamp(42px, 7vw, 90px);
+        color: #444;
+        margin-top: -30px;
+    }
+
+    .date {
+        margin-top: 45px;
+        color: #555;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 14px;
+        letter-spacing: 0.08em;
+    }
+
+    .done {
+        font-size: clamp(32px, 5vw, 70px);
+        font-weight: 700;
+    }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="label">До объявления Антона пидаром осталось:</div>
+
+    <div id="timer" class="timer">
+        <div class="unit">
+            <div id="days" class="number">000</div>
+            <div class="caption">дней</div>
+        </div>
+
+        <div class="separator">:</div>
+
+        <div class="unit">
+            <div id="hours" class="number">00</div>
+            <div class="caption">часов</div>
+        </div>
+
+        <div class="separator">:</div>
+
+        <div class="unit">
+            <div id="minutes" class="number">00</div>
+            <div class="caption">минут</div>
+        </div>
+
+        <div class="separator">:</div>
+
+        <div class="unit">
+            <div id="seconds" class="number">00</div>
+            <div class="caption">секунд</div>
+        </div>
+    </div>
+
+    <div class="date">31.12.2026 · 23:59 UTC</div>
+</div>
+
+<script>
+    // Конечная дата: 31 декабря 2026 года, 23:59 по UTC (Гринвич).
+    const target = new Date("2026-12-31T23:59:00Z").getTime();
+
+    const $ = id => document.getElementById(id);
+
+    function update() {
+        const now = Date.now();
+        let diff = target - now;
+
+        if (diff <= 0) {
+            $("timer").innerHTML = '<div class="done">АНТОН — МЕТАЛЛУРГ</div>';
+            $("timer").className = "timer";
+            return;
+        }
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        $("days").textContent = String(days).padStart(3, "0");
+        $("hours").textContent = String(hours).padStart(2, "0");
+        $("minutes").textContent = String(minutes).padStart(2, "0");
+        $("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    update();
+    setInterval(update, 250);
+</script>
+
+</body>
+</html>
